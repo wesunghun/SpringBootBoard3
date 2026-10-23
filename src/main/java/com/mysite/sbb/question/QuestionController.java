@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.server.ResponseStatusException;
 
+import com.mysite.sbb.CommonUtil;
 import com.mysite.sbb.answer.AnswerForm;
 import com.mysite.sbb.user.SiteUser;
 import com.mysite.sbb.user.UserService;
@@ -29,10 +30,11 @@ public class QuestionController {
 	
 	private final QuestionService questionService;
 	private final UserService userService;
+	private final CommonUtil commonUtil;
 	
 	@GetMapping("/list")
-	public String list(Model model, @RequestParam(value="page", defaultValue="0")int page) {
-		Page<Question> paging = this.questionService.getList(page);
+	public String list(Model model, @RequestParam(value="page", defaultValue="0")int page, @RequestParam(value= "kw", defaultValue="") String kw) {
+		Page<Question> paging = this.questionService.getList(page, kw);
 		model.addAttribute("paging", paging);
 		return "question_list";
 	}
@@ -41,6 +43,8 @@ public class QuestionController {
 	public String detail(Model model, @PathVariable("id") Integer id, AnswerForm answerForm) {
 		Question question = this.questionService.getQuestion(id);
 		model.addAttribute("question", question);
+		model.addAttribute("commonUtil", commonUtil);
+		model.addAttribute("kw");
 		return "question_detail";
 	}
 	
